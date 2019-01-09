@@ -1,3 +1,4 @@
 # FTPclient
-Using socket+Qt realize a FTP client.
-upload not finished yet.
+Using socket+Qt realize a simple FTP client.
+
+Upload not finished yet.
