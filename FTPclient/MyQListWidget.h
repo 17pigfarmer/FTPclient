@@ -17,7 +17,7 @@ class MyQListWidget : public QListWidget
 public:
 	MyQListWidget(QWidget *parent = Q_NULLPTR);
 	SOCKET control_socket;
-	SOCKET data_socket;
+
 
 protected:
 

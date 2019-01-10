@@ -50,33 +50,9 @@ int FtpTools::LogIn(SOCKET s, const string &username, const string &password)
 	//send_buf = "PASV";
 	//FlushBuffer(s);
 	//send(s, send_buf.c_str(), send_buf.size() + 1, 0);
-	this->SendCommand(s, "PASV");
-
-	char readbuffer2[100];
-	recv(s, readbuffer2, 100, 0);
-	if (readbuffer2[0] != '2' || readbuffer2[1] != '2' || readbuffer2[2] != '7') {
-		return 0;
-	}
-	string port1, port2;
-	int count=0;
-	for (int i = 0; i < 100; i++) {
-		if (readbuffer2[i] == ',') {
-			count++;
-		}
-		if (count == 4) {
-			i++;
-			for (; readbuffer2[i] != ','; i++) {
-				port1+=readbuffer2[i];
-			}
-			i++;
-			for (; readbuffer2[i] != ')'; i++) {
-				port2 += readbuffer2[i];
-			}
-			break;
-		}
-	}
+	
 	//this->SendCommand(s, "NLST");
-	return std::stoi(port1)*256+std::stoi(port2);
+	return 1;
 
 }
 
@@ -97,8 +73,9 @@ bool FtpTools::WSA()
 	return 1;
 }
 
-void FtpTools::DownloadFile(SOCKET s,SOCKET data_s, const string & filename, const string & dir)
+void FtpTools::DownloadFile(SOCKET s, const string & filename, const string & dir)
 {
+	
 	SendCommand(s, "SIZE " + filename+"\r\n");
 	char readbuffer[50];
 	recv(s, readbuffer, 50, 0);
@@ -109,6 +86,7 @@ void FtpTools::DownloadFile(SOCKET s,SOCKET data_s, const string & filename, con
 	std::ofstream mcfile;
 	mcfile.open(dir+filename);
 
+	SOCKET data_s = PassiveMode(s);
 	SendCommand(s, "RETR " + filename + "\r\n");
 	int max = filesize_int/500+1;
 	char recvbuffer[500];
@@ -120,8 +98,9 @@ void FtpTools::DownloadFile(SOCKET s,SOCKET data_s, const string & filename, con
 
 }
 
-void FtpTools::ListFile(SOCKET s, SOCKET data_s,string &filelist)
+void FtpTools::ListFile(SOCKET s,string &filelist)
 {
+	SOCKET data_s = PassiveMode(s);
 	SendCommand(s, "NLST\r\n");
 	char readbuffer[1000];
 	while (true)
@@ -147,14 +126,14 @@ void FtpTools::CloseSocket(SOCKET s, SOCKET data_s)
 	closesocket(data_s);
 }
 
-void FtpTools::UploadFile(SOCKET s, SOCKET data_s, string & file)
+void FtpTools::UploadFile(SOCKET s, string & file)
 {
 	std::ifstream mcfile;
 	mcfile.open(file);
 	std::stringstream ss;
 	ss << mcfile.rdbuf();
 	string str(ss.str());
-	FlushBuffer(s);
+	SOCKET data_s = PassiveMode(s);
 	string filename = file.substr(file.find_last_of('/')+1);
 	SendCommand(s, "STOR " + filename + "\r\n");
 
@@ -168,9 +147,56 @@ void FtpTools::UploadFile(SOCKET s, SOCKET data_s, string & file)
 	
 }
 
-int FtpTools::PassiveMode(SOCKET s)
+SOCKET FtpTools::PassiveMode(SOCKET s)
 {
-	return 0;
+	ip_port* ipp = new ip_port;
+	this->SendCommand(s, "PASV");
+
+	char readbuffer2[100];
+	recv(s, readbuffer2, 100, 0);
+	if (readbuffer2[0] != '2' || readbuffer2[1] != '2' || readbuffer2[2] != '7') {
+		return 0;
+	}
+	string port1, port2;
+	string ip(readbuffer2);
+	int count = 0;
+	for (int i = 0; i < 100; i++) {
+		if (readbuffer2[i] == ',') {
+			count++;
+		}
+		if (count == 4) {
+			i++;
+			ip = ip.substr(27, i - 28);
+			for (; readbuffer2[i] != ','; i++) {
+				port1 += readbuffer2[i];
+			}
+			i++;
+			for (; readbuffer2[i] != ')'; i++) {
+				port2 += readbuffer2[i];
+			}
+			break;
+		}
+	}
+	std::replace(ip.begin(), ip.end(), ',', '.');
+	ipp->ip = ip;
+
+	ipp->port = std::stoi(port1) * 256 + std::stoi(port2);
+	
+	SOCKET data_s;
+
+	data_s = socket(AF_INET, SOCK_STREAM, 0);
+	struct sockaddr_in data_addr;
+	CreateSocketAddr_in(&data_addr, ipp->ip, ipp->port);
+
+
+	if (ConnectServer(data_s, &data_addr) == 0) {
+		//QMessageBox::critical(0, "critical message", "Connect fail!", QMessageBox::Default, 0, 0);
+		closesocket(data_s);
+		return 0;
+	}
+	delete ipp;
+	return data_s;
+	
 }
 
 

@@ -18,9 +18,7 @@ public:
 
 private:
 	Ui::FTPclientClass ui;
-	SOCKET data_socket;
 	SOCKET control_socket;
-	int data_port;
 	FtpTools ftp;
 
 protected:

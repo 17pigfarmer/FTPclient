@@ -29,8 +29,8 @@ void MyQListWidget::dropEvent(QDropEvent *event)
 	QString str = event->mimeData()->text();
 	string temp = str.toStdString().substr(str.toStdString().find_last_of('/')+1);
 	FtpTools ftp;
-	ftp.UploadFile(control_socket, data_socket, str.toStdString());
-	
+	ftp.UploadFile(control_socket,str.toStdString());
+
 	if (!str.isEmpty())
 	{
 		QListWidgetItem *item = new QListWidgetItem(this);
