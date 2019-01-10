@@ -55,7 +55,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>10.131.8.248</string>
+     <string>127.0.0.1</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="username_text">
@@ -68,7 +68,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>drz</string>
+     <string/>
     </property>
    </widget>
    <widget class="QLineEdit" name="password_text">
@@ -81,7 +81,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>123456</string>
+     <string/>
     </property>
     <property name="echoMode">
      <enum>QLineEdit::Password</enum>
