@@ -13,11 +13,17 @@
     <height>418</height>
    </rect>
   </property>
+  <property name="acceptDrops">
+   <bool>false</bool>
+  </property>
   <property name="windowTitle">
    <string>FTPclient</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QListWidget" name="file_list">
+   <property name="toolTipDuration">
+    <number>2</number>
+   </property>
+   <widget class="MyQListWidget" name="files">
     <property name="geometry">
      <rect>
       <x>30</x>
@@ -25,6 +31,18 @@
       <width>256</width>
       <height>192</height>
      </rect>
+    </property>
+    <property name="acceptDrops">
+     <bool>false</bool>
+    </property>
+    <property name="dragEnabled">
+     <bool>true</bool>
+    </property>
+    <property name="dragDropMode">
+     <enum>QAbstractItemView::DragDrop</enum>
+    </property>
+    <property name="defaultDropAction">
+     <enum>Qt::MoveAction</enum>
     </property>
    </widget>
    <widget class="QLineEdit" name="ip_text">
@@ -73,26 +91,13 @@
     <property name="geometry">
      <rect>
       <x>370</x>
-      <y>140</y>
+      <y>160</y>
       <width>88</width>
       <height>23</height>
      </rect>
     </property>
     <property name="text">
      <string>查询</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="upload_button">
-    <property name="geometry">
-     <rect>
-      <x>370</x>
-      <y>190</y>
-      <width>88</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>上传</string>
     </property>
    </widget>
    <widget class="QPushButton" name="download_button">
@@ -102,7 +107,7 @@
     <property name="geometry">
      <rect>
       <x>370</x>
-      <y>240</y>
+      <y>230</y>
       <width>88</width>
       <height>23</height>
      </rect>
@@ -121,7 +126,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>退出</string>
+     <string>登出</string>
     </property>
    </widget>
    <widget class="QLabel" name="ip_label">
@@ -239,6 +244,13 @@
   <widget class="QStatusBar" name="statusBar"/>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>MyQListWidget</class>
+   <extends>QListWidget</extends>
+   <header>MyQListWidget.h</header>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="ftpclient.qrc"/>
  </resources>

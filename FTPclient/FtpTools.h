@@ -1,9 +1,11 @@
+#pragma once
 #include <WINSOCK2.H>
 #include <WS2tcpip.h>
 #include <iostream>
 #include <string>
 #include <fstream>
 #include <algorithm>
+#include <sstream>
 #ifndef string
 #define string std::string
 #endif // string
@@ -21,8 +23,8 @@ public:
 	void ListFile(SOCKET s, SOCKET data_s,string &filelist);
 	void CloseSocket(SOCKET s);
 	void CloseSocket(SOCKET s, SOCKET data_s);
-	void UploadFile(SOCKET s, SOCKET data_s, string &filename);
-
+	void UploadFile(SOCKET s, SOCKET data_s, string &file);
+	int PassiveMode(SOCKET s);
 private:
 	void FlushBuffer(SOCKET s);
 

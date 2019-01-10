@@ -39,9 +39,15 @@
     <ClCompile Include="FtpTools.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MyQListWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="ftpclient.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="MyQListWidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

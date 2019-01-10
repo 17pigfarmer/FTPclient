@@ -1,4 +1,5 @@
 #include "ftpclient.h"
+
 #ifndef string
 #define string std::string
 #endif // string
@@ -9,7 +10,9 @@ FTPclient::FTPclient(QWidget *parent)
 	: QMainWindow(parent)
 {
 	ui.setupUi(this);
+	ui.files->setDragDropMode(QAbstractItemView::NoDragDrop);
 }
+
 
 void FTPclient::on_query_button_clicked() {
 
@@ -69,12 +72,12 @@ void FTPclient::on_query_button_clicked() {
 	ftp.ListFile(control_socket, data_socket, filelist);
 	int filenum = count(filelist.begin(), filelist.end(), '\r');
 
-	ui.file_list->setViewMode(QListWidget::IconMode);
-	ui.file_list->setResizeMode(QListWidget::Adjust);
-	ui.file_list->setMovement(QListWidget::Static);
+	ui.files->setViewMode(QListWidget::IconMode);
+	ui.files->setResizeMode(QListWidget::Adjust);
+	//ui.files->setMovement(QListWidget::Static);
 	string temp;
 	for (int i = 0; i < filenum; i++) {
-		QListWidgetItem *item = new QListWidgetItem(ui.file_list);
+		QListWidgetItem *item = new QListWidgetItem(ui.files);
 		QStyle::StandardPixmap sp = (QStyle::StandardPixmap)(25);
 
 		item->setData(Qt::DecorationRole, qApp->style()->standardPixmap(sp).scaled(QSize(16, 16), Qt::KeepAspectRatio, Qt::SmoothTransformation));
@@ -82,6 +85,9 @@ void FTPclient::on_query_button_clicked() {
 		filelist.erase(0, filelist.find("\n") + 1);
 		item->setData(Qt::DisplayRole, temp.c_str());
 	}
+	ui.files->data_socket = data_socket;
+	ui.files->control_socket = control_socket;
+	ui.files->setDragDropMode(QAbstractItemView::DragDrop);
 
 
 
@@ -89,29 +95,32 @@ void FTPclient::on_query_button_clicked() {
 
 }
 
-void FTPclient::on_upload_button_clicked()
-{
-	
-}
+
+
+
 
 void FTPclient::on_download_button_clicked()
 {
-	string filename = ui.file_list->currentItem()->text().toStdString();
+	string filename = ui.files->currentItem()->text().toStdString();
 	
 	ftp.DownloadFile(control_socket, data_socket,filename, ui.dir_text->text().toStdString());
 }
 
 void FTPclient::on_quit_button_clicked()
 {
+
+	string file = "dawtraw/awraw/awraw/dd.text";
+	string filename = file.substr(file.find_last_of('/')+1);
+
+
 	ftp.CloseSocket(control_socket, data_socket);
-	ui.download_button->setEnabled(false);
-	ui.file_list->clear();
-	ui.username_text->clear();
+	ui.files->clear();
+	ui.files->setDragDropMode(QAbstractItemView::NoDragDrop);
 	ui.password_text->clear();
-	ui.ip_text->clear();
+	ui.download_button->setEnabled(false);
 }
 
-void FTPclient::on_file_list_itemSelectionChanged()
+void FTPclient::on_files_itemSelectionChanged()
 {
 	if (ui.download_button->isEnabled() == false) {
 		ui.download_button->setEnabled(true);

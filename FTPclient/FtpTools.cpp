@@ -1,5 +1,6 @@
 #include "FtpTools.h"
 
+
 void FtpTools::CreateSocketAddr_in(struct sockaddr_in * addr,const string &ipaddr,int port)
 {
 	memset(addr, 0, sizeof(struct sockaddr_in));
@@ -146,8 +147,30 @@ void FtpTools::CloseSocket(SOCKET s, SOCKET data_s)
 	closesocket(data_s);
 }
 
-void FtpTools::UploadFile(SOCKET s, SOCKET data_s, string & filename)
+void FtpTools::UploadFile(SOCKET s, SOCKET data_s, string & file)
 {
+	std::ifstream mcfile;
+	mcfile.open(file);
+	std::stringstream ss;
+	ss << mcfile.rdbuf();
+	string str(ss.str());
+	FlushBuffer(s);
+	string filename = file.substr(file.find_last_of('/')+1);
+	SendCommand(s, "STOR " + filename + "\r\n");
+
+
+	send(data_s,str.c_str(),str.size()+1, 0);
+
+	mcfile.close();
+	
+	char readbuffer[50];
+	recv(s, readbuffer, 50, 0);
+	
+}
+
+int FtpTools::PassiveMode(SOCKET s)
+{
+	return 0;
 }
 
 

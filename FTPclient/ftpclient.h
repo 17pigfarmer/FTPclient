@@ -4,6 +4,10 @@
 #include <QMessageBox>
 #include "ui_ftpclient.h"
 #include "FtpTools.h"
+#include <MyQListWidget.h>
+
+
+
 
 class FTPclient : public QMainWindow
 {
@@ -19,10 +23,13 @@ private:
 	int data_port;
 	FtpTools ftp;
 
+protected:
+
+
+
 private slots:
 	void on_query_button_clicked();
-	void on_upload_button_clicked();
 	void on_download_button_clicked();
 	void on_quit_button_clicked();
-	void on_file_list_itemSelectionChanged();
+	void on_files_itemSelectionChanged();
 };

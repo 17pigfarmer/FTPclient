@@ -13,13 +13,13 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
-#include <QtWidgets/QListWidget>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QToolBar>
 #include <QtWidgets/QWidget>
+#include "MyQListWidget.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -27,12 +27,11 @@ class Ui_FTPclientClass
 {
 public:
     QWidget *centralWidget;
-    QListWidget *file_list;
+    MyQListWidget *files;
     QLineEdit *ip_text;
     QLineEdit *username_text;
     QLineEdit *password_text;
     QPushButton *query_button;
-    QPushButton *upload_button;
     QPushButton *download_button;
     QPushButton *quit_button;
     QLabel *ip_label;
@@ -50,11 +49,17 @@ public:
             FTPclientClass->setObjectName(QString::fromUtf8("FTPclientClass"));
         FTPclientClass->setEnabled(true);
         FTPclientClass->resize(482, 418);
+        FTPclientClass->setAcceptDrops(false);
         centralWidget = new QWidget(FTPclientClass);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
-        file_list = new QListWidget(centralWidget);
-        file_list->setObjectName(QString::fromUtf8("file_list"));
-        file_list->setGeometry(QRect(30, 140, 256, 192));
+        centralWidget->setToolTipDuration(2);
+        files = new MyQListWidget(centralWidget);
+        files->setObjectName(QString::fromUtf8("files"));
+        files->setGeometry(QRect(30, 140, 256, 192));
+        files->setAcceptDrops(false);
+        files->setDragEnabled(true);
+        files->setDragDropMode(QAbstractItemView::DragDrop);
+        files->setDefaultDropAction(Qt::MoveAction);
         ip_text = new QLineEdit(centralWidget);
         ip_text->setObjectName(QString::fromUtf8("ip_text"));
         ip_text->setGeometry(QRect(130, 10, 311, 21));
@@ -67,14 +72,11 @@ public:
         password_text->setEchoMode(QLineEdit::Password);
         query_button = new QPushButton(centralWidget);
         query_button->setObjectName(QString::fromUtf8("query_button"));
-        query_button->setGeometry(QRect(370, 140, 88, 23));
-        upload_button = new QPushButton(centralWidget);
-        upload_button->setObjectName(QString::fromUtf8("upload_button"));
-        upload_button->setGeometry(QRect(370, 190, 88, 23));
+        query_button->setGeometry(QRect(370, 160, 88, 23));
         download_button = new QPushButton(centralWidget);
         download_button->setObjectName(QString::fromUtf8("download_button"));
         download_button->setEnabled(false);
-        download_button->setGeometry(QRect(370, 240, 88, 23));
+        download_button->setGeometry(QRect(370, 230, 88, 23));
         quit_button = new QPushButton(centralWidget);
         quit_button->setObjectName(QString::fromUtf8("quit_button"));
         quit_button->setGeometry(QRect(370, 300, 88, 23));
@@ -129,9 +131,8 @@ public:
         username_text->setText(QApplication::translate("FTPclientClass", "drz", nullptr));
         password_text->setText(QApplication::translate("FTPclientClass", "123456", nullptr));
         query_button->setText(QApplication::translate("FTPclientClass", "\346\237\245\350\257\242", nullptr));
-        upload_button->setText(QApplication::translate("FTPclientClass", "\344\270\212\344\274\240", nullptr));
         download_button->setText(QApplication::translate("FTPclientClass", "\344\270\213\350\275\275", nullptr));
-        quit_button->setText(QApplication::translate("FTPclientClass", "\351\200\200\345\207\272", nullptr));
+        quit_button->setText(QApplication::translate("FTPclientClass", "\347\231\273\345\207\272", nullptr));
         ip_label->setText(QApplication::translate("FTPclientClass", "\345\237\237\345\220\215:", nullptr));
         username_label->setText(QApplication::translate("FTPclientClass", "\347\224\250\346\210\267\345\220\215:", nullptr));
         password_label->setText(QApplication::translate("FTPclientClass", "\345\257\206\347\240\201:", nullptr));
