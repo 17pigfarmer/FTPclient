@@ -1,5 +1,5 @@
 # FTPclient
-Using socket+Qt realize a simple FTP client.
+Using socket+Qt make a simple FTP client.
 
 Some error-handler need to be improved.
 
